@@ -6,28 +6,28 @@
                 bookmarkBindings, removeBindings, bookmarkEvents,
                 reorderBindings, reorderEvents, clearBindings,
                 }">
-                <span class="control">
-                    <a class="tag is-warning icon mr-1"
-                        v-on="clearBindings"
-                        v-if="hasClear">
-                        <fa icon="trash-alt"/>
-                    </a>
-                </span>
-                <draggable class="field is-grouped bookmark-items no-scrollbars"
+                <a class="tag is-warning mr-1"
+                    v-on="clearBindings"
+                    v-if="hasClear">
+                    <span class="icon is-small">
+                        <fa :icon="faTrashCan"/>
+                    </span>
+                </a>
+                <draggable class="field is-grouped bookmark-items no-scrollbars mt-0"
                     v-bind="reorderBindings"
                     v-on="reorderEvents">
                     <template #item="{ element }">
                         <span class="control"
                             v-bind="bookmarkBindings(element)">
                             <span class="tags has-addons">
-                                <a :class="['tag is-bold', {'is-link': matches($route, element)}]"
+                                <a :class="['tag is-bold', {'is-dark': matches($route, element)}]"
                                     v-on="bookmarkEvents(element)">
                                     <span>
                                         {{ i18n(element.meta.title) }}
                                     </span>
                                     <span class="icon is-small has-text-danger"
                                         v-if="element.state">
-                                        <fa icon="circle"
+                                        <fa :icon="faCircle"
                                             size="xs"/>
                                     </span>
                                 </a>
@@ -35,7 +35,7 @@
                                     v-on="stickBindings(element)"
                                     v-if="!element.sticky && !isExcluded(element)">
                                     <span class="icon is-small">
-                                        <fa icon="check"/>
+                                        <fa :icon="faCheck"/>
                                     </span>
                                 </a>
                                 <a class="tag is-delete"
@@ -53,11 +53,8 @@
 <script>
 import Draggable from 'vuedraggable';
 import { FontAwesomeIcon as Fa } from '@fortawesome/vue-fontawesome';
-import { library } from '@fortawesome/fontawesome-svg-core';
-import { faCheck, faTrashAlt, faCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheck, faCircle, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import CoreBookmarks from '../../core/components/Bookmarks.vue';
-
-library.add(faCheck, faTrashAlt, faCircle);
 
 export default {
     name: 'Bookmarks',
@@ -65,78 +62,13 @@ export default {
     components: { Fa, CoreBookmarks, Draggable },
 
     inject: ['i18n'],
+
+    data: () => ({
+        faCheck,
+        faCircle,
+        faTrashCan,
+    }),
 };
 </script>
 
-<style lang="scss">
-    @import '@enso-ui/themes/bulma/variables';
-
-    .bookmarks {
-        position: fixed;
-        top: $navbar-height;
-        width: 100vw;
-        display: flex;
-        padding: 0.2em;
-        -webkit-box-shadow: 1px 0 1px hsla(0,0%,4%,.65);
-        box-shadow: 1px 0 1px hsla(0,0%,4%,.65);
-        z-index: 2;
-        [dir='ltr'] & {
-            transition: margin-left .5s, width .5s;
-            margin-left: 0;
-        }
-        [dir='rtl'] & {
-            transition: margin-right .5s, width .5s;
-            margin-right: 0;
-        }
-
-        &.with-sidebar {
-            width: calc(100vw - #{$sidebar-width});
-            [dir='ltr'] & {
-                margin-left: $sidebar-width;
-            }
-            [dir='rtl'] & {
-                margin-right: $sidebar-width;
-            }
-
-            &.sidebar-collapsed {
-                width: calc(100vw - #{$sidebar-collapsed-width});
-                [dir='ltr'] & {
-                    margin-left: $sidebar-collapsed-width;
-                }
-                [dir='rtl'] & {
-                    margin-right: $sidebar-collapsed-width;
-                }
-            }
-        }
-
-        a.tag:hover {
-            text-decoration: none;
-        }
-
-        .tag.check {
-            [dir='ltr'] & {
-                margin-left: 0.05em;
-            }
-            [dir='rtl'] & {
-                margin-right: 0.05em;
-            }
-        }
-
-        .bookmark-items {
-            position: relative;
-            overflow-x: auto;
-            overflow-y: hidden;
-            margin-bottom: 0;
-
-            .control:not(:last-child) {
-                [dir='ltr'] & {
-                    margin-right: .25em;
-                }
-                [dir='rtl'] & {
-                    margin-left: .25em;
-                }
-            }
-        }
-    }
-
-</style>
+<style lang="scss" src="../styles/bookmarks.scss"></style>

@@ -1,0 +1,70 @@
+.bookmarks {
+    position: fixed;
+    top: var(--bulma-navbar-height);
+    width: 100vw;
+    display: flex;
+    padding: 0.2em;
+    -webkit-box-shadow: 1px 0 1px hsla(0,0%,4%,.65);
+    box-shadow: 1px 0 1px hsla(0,0%,4%,.65);
+    z-index: 2;
+    [dir='ltr'] & {
+        transition: margin-left .5s, width .5s;
+        margin-left: 0;
+    }
+    [dir='rtl'] & {
+        transition: margin-right .5s, width .5s;
+        margin-right: 0;
+    }
+
+    .field.is-grouped {
+        gap: 0.25rem;
+    }
+
+    &.with-sidebar {
+        width: calc(100vw - var(--enso-sidebar-width));
+        [dir='ltr'] & {
+            margin-left: var(--enso-sidebar-width);
+        }
+        [dir='rtl'] & {
+            margin-right: var(--enso-sidebar-width);
+        }
+
+        &.sidebar-collapsed {
+            width: calc(100vw - var(--enso-sidebar-collapsed-width));
+            [dir='ltr'] & {
+                margin-left: var(--enso-sidebar-collapsed-width);
+            }
+            [dir='rtl'] & {
+                margin-right: var(--enso-sidebar-collapsed-width);
+            }
+        }
+    }
+
+    a.tag:hover {
+        text-decoration: none;
+    }
+
+    .tag.check {
+        [dir='ltr'] & {
+            margin-left: 0.05em;
+        }
+        [dir='rtl'] & {
+            margin-right: 0.05em;
+        }
+    }
+
+    .tag.is-delete {
+        margin-inline-start: 0;
+    }
+
+    .bookmark-items {
+        position: relative;
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: nowrap;
+        min-width: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        margin-bottom: 0;
+    }
+}

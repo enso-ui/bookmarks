@@ -9,8 +9,7 @@
             <div class="level-item">
                 <core-bookmark-state>
                     <template #default="{ bindings, events }">
-                        <vue-switch class="is-medium"
-                            v-bind="bindings"
+                        <vue-switch v-bind="bindings"
                             v-on="events"/>
                         </template>
                 </core-bookmark-state>

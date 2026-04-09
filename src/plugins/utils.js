@@ -21,7 +21,7 @@ const index = (bookmarks, bookmark) => bookmarks.findIndex(existing => matches(e
 
 const stickies = bookmarks => bookmarks.filter(({ sticky, state }) => sticky || state);
 
-const persist = (bookmarks) => {
+const persist = bookmarks => {
     localStorage.setItem('bookmarks', JSON.stringify(stickies(bookmarks)));
 };
 

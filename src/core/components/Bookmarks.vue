@@ -1,5 +1,15 @@
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex';
+import { getActivePinia } from 'pinia';
+
+const useStore = id => {
+    const store = getActivePinia()?._s?.get(id);
+
+    if (!store) {
+        throw new Error(`Missing Pinia store: ${id}`);
+    }
+
+    return store;
+};
 
 export default {
     name: 'Bookmarks',
@@ -20,8 +30,12 @@ export default {
     }),
 
     computed: {
-        ...mapState('bookmarks', ['bookmarks']),
-        ...mapGetters('bookmarks', ['isExcluded', 'matches', 'stickies', 'index']),
+        bookmarks() {
+            return useStore('bookmarks').bookmarks;
+        },
+        stickies() {
+            return useStore('bookmarks').stickies;
+        },
         container() {
             return this.$parent.$refs[this.ref].$el;
         },
@@ -44,8 +58,36 @@ export default {
     },
 
     methods: {
-        ...mapMutations('bookmarks', ['init', 'set', 'exclude', 'push', 'stick', 'clear']),
-        ...mapMutations('bookmarks', { splice: 'remove' }),
+        init() {
+            useStore('bookmarks').init();
+        },
+        set(items) {
+            useStore('bookmarks').set(items);
+        },
+        exclude(items) {
+            useStore('bookmarks').exclude(items);
+        },
+        push(bookmark) {
+            useStore('bookmarks').push(bookmark);
+        },
+        stick(bookmark) {
+            useStore('bookmarks').stick(bookmark);
+        },
+        clear(bookmark) {
+            useStore('bookmarks').clear(bookmark);
+        },
+        splice(bookmark) {
+            useStore('bookmarks').remove(bookmark);
+        },
+        isExcluded(bookmark) {
+            return useStore('bookmarks').isExcluded(bookmark);
+        },
+        matches(first, second) {
+            return useStore('bookmarks').matches(first, second);
+        },
+        index(bookmark) {
+            return useStore('bookmarks').indexByBookmark(bookmark);
+        },
         add(bookmark) {
             this.push(bookmark);
             setTimeout(this.focus, 1000);
