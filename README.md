@@ -25,4 +25,4 @@ Thank you to all the users who already contributed to Enso!
 
 ## License
 
-[MIT](https://opensource.org/licenses/MIT)
+[MIT](LICENSE)
