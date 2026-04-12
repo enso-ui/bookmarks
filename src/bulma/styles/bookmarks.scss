@@ -44,19 +44,6 @@
         text-decoration: none;
     }
 
-    .tag.check {
-        [dir='ltr'] & {
-            margin-left: 0.05em;
-        }
-        [dir='rtl'] & {
-            margin-right: 0.05em;
-        }
-    }
-
-    .tag.is-delete {
-        margin-inline-start: 0;
-    }
-
     .bookmark-items {
         position: relative;
         display: flex;

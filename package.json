@@ -1,6 +1,6 @@
 {
   "name": "@enso-ui/bookmarks",
-  "version": "3.1.1",
+  "version": "3.1.2",
   "description": "Basic bookmarks package",
   "main": "src/bulma/components/Bookmarks.vue",
   "scripts": {
