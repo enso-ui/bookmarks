@@ -1,15 +1,5 @@
 <script>
-import { getActivePinia } from 'pinia';
-
-const useStore = id => {
-    const store = getActivePinia()?._s?.get(id);
-
-    if (!store) {
-        throw new Error(`Missing Pinia store: ${id}`);
-    }
-
-    return store;
-};
+import { bookmarks as useBookmarks } from '../../pinia/bookmarks';
 
 export default {
     name: 'Bookmarks',
@@ -31,10 +21,10 @@ export default {
 
     computed: {
         bookmarks() {
-            return useStore('bookmarks').bookmarks;
+            return useBookmarks().bookmarks;
         },
         stickies() {
-            return useStore('bookmarks').stickies;
+            return useBookmarks().stickies;
         },
         container() {
             return this.$parent.$refs[this.ref].$el;
@@ -59,34 +49,34 @@ export default {
 
     methods: {
         init() {
-            useStore('bookmarks').init();
+            useBookmarks().init();
         },
         set(items) {
-            useStore('bookmarks').set(items);
+            useBookmarks().set(items);
         },
         exclude(items) {
-            useStore('bookmarks').exclude(items);
+            useBookmarks().exclude(items);
         },
         push(bookmark) {
-            useStore('bookmarks').push(bookmark);
+            useBookmarks().push(bookmark);
         },
         stick(bookmark) {
-            useStore('bookmarks').stick(bookmark);
+            useBookmarks().stick(bookmark);
         },
         clear(bookmark) {
-            useStore('bookmarks').clear(bookmark);
+            useBookmarks().clear(bookmark);
         },
         splice(bookmark) {
-            useStore('bookmarks').remove(bookmark);
+            useBookmarks().remove(bookmark);
         },
         isExcluded(bookmark) {
-            return useStore('bookmarks').isExcluded(bookmark);
+            return useBookmarks().isExcluded(bookmark);
         },
         matches(first, second) {
-            return useStore('bookmarks').matches(first, second);
+            return useBookmarks().matches(first, second);
         },
         index(bookmark) {
-            return useStore('bookmarks').indexByBookmark(bookmark);
+            return useBookmarks().indexByBookmark(bookmark);
         },
         add(bookmark) {
             this.push(bookmark);

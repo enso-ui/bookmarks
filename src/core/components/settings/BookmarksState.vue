@@ -1,28 +1,19 @@
 <script>
-import { getActivePinia } from 'pinia';
-
-const useStore = id => {
-    const store = getActivePinia()?._s?.get(id);
-
-    if (!store) {
-        throw new Error(`Missing Pinia store: ${id}`);
-    }
-
-    return store;
-};
+import { bookmarks as useBookmarks } from '../../../pinia/bookmarks';
+import { preferences as usePreferences } from '@enso-ui/ui/src/pinia/preferences';
 
 export default {
     name: 'BookmarksState',
 
     methods: {
         empty() {
-            useStore('bookmarks').empty();
+            useBookmarks().empty();
         },
         push(route) {
-            useStore('bookmarks').push(route);
+            useBookmarks().push(route);
         },
         setBookmarksState(state) {
-            return useStore('preferences').setBookmarksState(state);
+            return usePreferences().setBookmarksState(state);
         },
         update(state) {
             if (state) {
@@ -38,7 +29,7 @@ export default {
     render() {
         return this.$slots.default({
             bindings: {
-                modelValue: useStore('preferences').global.bookmarks,
+                modelValue: usePreferences().global.bookmarks,
             },
             events: {
                 'update:modelValue': state => this.update(state),
