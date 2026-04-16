@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { currentRoute } from '@enso-ui/ui/src/core/services/pinia';
+import App from '@enso-ui/ui/src/core/app';
 import {
     qualifies, matches, stickies, map, index, persist,
 } from '../plugins/utils';
@@ -52,7 +52,7 @@ export const bookmarks = defineStore('bookmarks', {
             persist(this.bookmarks);
         },
         title(title) {
-            const current = this.bookmarks[index(this.bookmarks, currentRoute())];
+            const current = this.bookmarks[index(this.bookmarks, App.router.currentRoute.value)];
 
             if (!current) {
                 return;
