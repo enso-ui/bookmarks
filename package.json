@@ -4,7 +4,8 @@
   "description": "Basic bookmarks package",
   "main": "src/bulma/components/Bookmarks.vue",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest",
+    "test:run": "vitest run"
   },
   "repository": {
     "type": "git",
@@ -35,7 +36,11 @@
   "devDependencies": {
     "@enso-ui/switch": "^2.1.0",
     "@enso-ui/ui": "^7.1.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "axios": "^1.0.0",
+    "jsdom": "^26.1.0",
     "pinia": "^3.0.3",
+    "vitest": "^3.2.4",
     "vue": "^3.5.0"
   }
 }

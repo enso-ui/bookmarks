@@ -1,5 +1,6 @@
 <script>
-import { bookmarks as useBookmarks } from '../../pinia/bookmarks';
+import { bookmarks } from '../../pinia/bookmarks';
+import { index, matches } from '../../plugins/utils';
 
 export default {
     name: 'Bookmarks',
@@ -20,12 +21,6 @@ export default {
     }),
 
     computed: {
-        bookmarks() {
-            return useBookmarks().bookmarks;
-        },
-        stickies() {
-            return useBookmarks().stickies;
-        },
         container() {
             return this.$parent.$refs[this.ref].$el;
         },
@@ -39,8 +34,8 @@ export default {
     },
 
     created() {
-        this.init();
-        this.exclude(this.excluded);
+        bookmarks().init();
+        bookmarks().exclude(this.excluded);
     },
 
     mounted() {
@@ -48,38 +43,8 @@ export default {
     },
 
     methods: {
-        init() {
-            useBookmarks().init();
-        },
-        set(items) {
-            useBookmarks().set(items);
-        },
-        exclude(items) {
-            useBookmarks().exclude(items);
-        },
-        push(bookmark) {
-            useBookmarks().push(bookmark);
-        },
-        stick(bookmark) {
-            useBookmarks().stick(bookmark);
-        },
-        clear(bookmark) {
-            useBookmarks().clear(bookmark);
-        },
-        splice(bookmark) {
-            useBookmarks().remove(bookmark);
-        },
-        isExcluded(bookmark) {
-            return useBookmarks().isExcluded(bookmark);
-        },
-        matches(first, second) {
-            return useBookmarks().matches(first, second);
-        },
-        index(bookmark) {
-            return useBookmarks().indexByBookmark(bookmark);
-        },
         add(bookmark) {
-            this.push(bookmark);
+            bookmarks().push(bookmark);
             setTimeout(this.focus, 1000);
         },
         uniqueId(bookmark) {
@@ -88,8 +53,11 @@ export default {
             return JSON.stringify({ name, params, query });
         },
         remove(bookmark) {
-            this.splice(bookmark);
-            const { name, params, query } = this.bookmarks[this.bookmarks.length - 1];
+            const store = bookmarks();
+
+            store.remove(bookmark);
+            const { name, params, query } = store.bookmarks[store.bookmarks.length - 1];
+
             this.$router.push({ name, params, query })
                 .catch(this.routerErrorHandler);
         },
@@ -100,7 +68,7 @@ export default {
         focus() {
             clearInterval(this.scrollInterval);
 
-            const bookmark = this.item(this.index(this.$route));
+            const bookmark = this.item(index(bookmarks().bookmarks, this.$route));
 
             if (!bookmark) {
                 return;
@@ -139,14 +107,16 @@ export default {
     },
 
     render() {
+        const store = bookmarks();
+
         return this.$slots.default({
-            bookmarks: this.bookmarks,
-            hasClear: this.stickies.length,
-            matches: this.matches,
-            stick: this.stick,
-            isExcluded: this.isExcluded,
+            bookmarks: store.bookmarks,
+            hasClear: store.stickies.length,
+            matches,
+            stick: bookmark => store.stick(bookmark),
+            isExcluded: bookmark => store.excluded.includes(bookmark.name),
             stickBindings: bookmark => ({
-                click: () => this.stick(bookmark),
+                click: () => store.stick(bookmark),
             }),
             bookmarkBindings: bookmark => {
                 this.uniqueId(bookmark);
@@ -159,15 +129,15 @@ export default {
                     .catch(this.routerErrorHandler),
             }),
             clearBindings: {
-                click: () => this.clear(this.$route),
+                click: () => store.clear(this.$route),
             },
             reorderBindings: {
-                modelValue: this.bookmarks,
+                modelValue: store.bookmarks,
                 itemKey: JSON.stringify,
                 ref: this.ref,
             },
             reorderEvents: {
-                'update:modelValue': this.set,
+                'update:modelValue': items => store.set(items),
             },
         });
     },

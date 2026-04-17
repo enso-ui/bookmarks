@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import App from '@enso-ui/ui/src/core/app';
 import {
     qualifies, matches, stickies, map, index, persist,
 } from '../plugins/utils';
@@ -17,19 +16,11 @@ export const bookmarks = defineStore('bookmarks', {
     }),
 
     getters: {
-        isExcluded: state => bookmark => state.excluded.includes(bookmark.name),
-        matches: () => (first, second) => matches(first, second),
         stickies: state => stickies(state.bookmarks),
-        indexByBookmark: state => bookmark => index(state.bookmarks, bookmark),
         stateByBookmark: state => bookmark => {
             const current = state.bookmarks[index(state.bookmarks, bookmark)];
 
             return current?.state ?? null;
-        },
-        stickyByBookmark: state => bookmark => {
-            const current = state.bookmarks[index(state.bookmarks, bookmark)];
-
-            return current?.sticky ?? false;
         },
     },
 
@@ -49,16 +40,6 @@ export const bookmarks = defineStore('bookmarks', {
             }
 
             current.state = data ?? null;
-            persist(this.bookmarks);
-        },
-        title(title) {
-            const current = this.bookmarks[index(this.bookmarks, App.router.currentRoute.value)];
-
-            if (!current) {
-                return;
-            }
-
-            current.meta.title = title;
             persist(this.bookmarks);
         },
         exclude(items) {
