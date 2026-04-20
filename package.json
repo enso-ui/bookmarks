@@ -1,7 +1,7 @@
 {
   "name": "@enso-ui/bookmarks",
   "version": "3.1.7",
-  "description": "Basic bookmarks package",
+  "description": "Bookmark toolbar and bookmark-state widgets for Enso UI.",
   "main": "src/bulma/components/Bookmarks.vue",
   "scripts": {
     "test": "vitest",
