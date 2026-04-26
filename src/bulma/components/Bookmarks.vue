@@ -20,7 +20,7 @@
                         <span class="control"
                             v-bind="bookmarkBindings(element)">
                             <span class="tags has-addons">
-                                <a :class="['tag is-bold', {'is-dark': matches($route, element)}]"
+                                <a :class="['tag', {'is-dark': matches($route, element)}]"
                                     v-on="bookmarkEvents(element)">
                                     <span>
                                         {{ i18n(element.meta.title) }}
