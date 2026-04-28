@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import Draggable from 'vuedraggable';
+import Draggable from 'vuedraggable/src/vuedraggable';
 import { FontAwesomeIcon as Fa } from '@fortawesome/vue-fontawesome';
 import { faCheck, faCircle, faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import CoreBookmarks from '../../core/components/Bookmarks.vue';
