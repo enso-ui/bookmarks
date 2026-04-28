@@ -15,6 +15,7 @@ export default {
     },
 
     data: () => ({
+        ready: false,
         scrollInterval: null,
         scrollStep: 5,
         ref: 'items',
@@ -22,7 +23,9 @@ export default {
 
     computed: {
         container() {
-            return this.$parent.$refs[this.ref].$el;
+            return this.ready
+                ? this.$parent.$refs[this.ref].$el
+                : null;
         },
     },
 
@@ -39,13 +42,19 @@ export default {
     },
 
     mounted() {
+        this.ready = true;
         this.add(this.$route);
+    },
+
+    beforeUnmount() {
+        this.ready = false;
+        clearInterval(this.scrollInterval);
     },
 
     methods: {
         add(bookmark) {
             bookmarks().push(bookmark);
-            setTimeout(this.focus, 1000);
+            this.$nextTick(this.focus);
         },
         uniqueId(bookmark) {
             const { name, params, query } = bookmark;
@@ -66,6 +75,10 @@ export default {
             return items[index];
         },
         focus() {
+            if (!this.ready) {
+                return;
+            }
+
             clearInterval(this.scrollInterval);
 
             const bookmark = this.item(index(bookmarks().bookmarks, this.$route));
