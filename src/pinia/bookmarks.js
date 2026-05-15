@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import {
-    qualifies, matches, stickies, map, index, persist,
+    qualifies, matches, stickies, map, sync, index, persist,
 } from '../plugins/utils';
 
 const storedBookmarks = () => {
@@ -39,6 +39,7 @@ export const bookmarks = defineStore('bookmarks', {
                 return;
             }
 
+            sync(current, bookmark);
             current.state = data ?? null;
             persist(this.bookmarks);
         },
@@ -47,6 +48,13 @@ export const bookmarks = defineStore('bookmarks', {
         },
         push(bookmark) {
             this.bookmarks = this.bookmarks.filter(({ sticky, state }) => sticky || state);
+            const current = this.bookmarks[index(this.bookmarks, bookmark)];
+
+            if (current) {
+                sync(current, bookmark);
+                persist(this.bookmarks);
+                return;
+            }
 
             if (qualifies(this.bookmarks, bookmark)) {
                 this.bookmarks.push(map(bookmark));

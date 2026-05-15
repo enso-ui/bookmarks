@@ -77,4 +77,46 @@ describe('bookmarks core components', () => {
             { name: 'dashboard', params: {}, query: {} },
         )).toBe(true);
     });
+
+    it('syncs tab query on existing bookmarks without duplicating them', () => {
+        const store = bookmarks();
+
+        store.$patch({
+            bookmarks: [{
+                name: 'users.edit',
+                meta: {},
+                params: { user: 1 },
+                query: {},
+                sticky: true,
+                state: { name: 'Ada' },
+            }],
+        });
+
+        store.push({
+            name: 'users.edit',
+            meta: {},
+            params: { user: 1 },
+            query: { tab: 'roles' },
+        });
+
+        expect(store.bookmarks).toHaveLength(1);
+        expect(store.bookmarks[0]).toMatchObject({
+            name: 'users.edit',
+            params: { user: 1 },
+            query: { tab: 'roles' },
+            sticky: true,
+            state: { name: 'Ada' },
+        });
+
+        store.push({
+            name: 'users.edit',
+            meta: {},
+            params: { user: 1 },
+            query: { tab: 'permissions' },
+        });
+
+        expect(store.bookmarks).toHaveLength(1);
+        expect(store.bookmarks[0].query).toEqual({ tab: 'permissions' });
+        expect(store.bookmarks[0].state).toEqual({ name: 'Ada' });
+    });
 });

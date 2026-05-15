@@ -1,8 +1,19 @@
+const withoutTab = query => Object.keys(query)
+    .filter(key => key !== 'tab')
+    .reduce((clean, key) => {
+        clean[key] = query[key];
+
+        return clean;
+    }, {});
+
+const matchesValues = (first, second) => Object.keys(first)
+    .every(key => first[key] == second[key])
+    && Object.keys(second)
+        .every(key => second[key] == first[key]);
+
 const matches = (first, second) => first.name === second.name
-    && Object.keys(first.params)
-        .every(key => first.params[key] == second.params[key])
-    && Object.keys(first.query)
-        .every(key => first.query[key] == second.query[key]);
+    && matchesValues(first.params, second.params)
+    && matchesValues(withoutTab(first.query), withoutTab(second.query));
 
 const qualifies = (bookmarks, bookmark) => bookmark && bookmark.name
     && !bookmark.meta.guestGuard
@@ -17,6 +28,12 @@ const map = bookmark => ({
     state: null,
 });
 
+const sync = (current, bookmark) => {
+    current.meta = JSON.parse(JSON.stringify(bookmark.meta));
+    current.params = JSON.parse(JSON.stringify(bookmark.params));
+    current.query = JSON.parse(JSON.stringify(bookmark.query));
+};
+
 const index = (bookmarks, bookmark) => bookmarks.findIndex(existing => matches(existing, bookmark));
 
 const stickies = bookmarks => bookmarks.filter(({ sticky, state }) => sticky || state);
@@ -26,5 +43,5 @@ const persist = bookmarks => {
 };
 
 export {
-    qualifies, matches, stickies, map, index, persist,
+    qualifies, matches, stickies, map, sync, index, persist,
 };
